@@ -29,3 +29,4 @@ Finally, obtain the API keys and plug them into your ``sentry.conf.py``:
 
     GOOGLE_CLIENT_SECRET = ""
 
+    GOOGLE_WHITE_LISTED_DOMAINS = ['mydomain.com']

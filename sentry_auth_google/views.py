@@ -5,17 +5,15 @@ from sentry.http import safe_urlopen, safe_urlread
 from sentry.utils import json
 from urllib import urlencode
 
-from .constants import ERR_INVALID_DOMAIN, USER_DETAILS_ENDPOINT
+from .constants import ERR_INVALID_DOMAIN, USER_DETAILS_ENDPOINT, DOMAINS
 
 
 class FetchUser(AuthView):
-    def __init__(self, domain=None, *args, **kwargs):
-        self.domain = domain
+    def __init__(self, *args, **kwargs):
         super(FetchUser, self).__init__(*args, **kwargs)
 
     def dispatch(self, request, helper):
         access_token = helper.fetch_state('data')['access_token']
-
         req = safe_urlopen('{0}?{1}'.format(
             USER_DETAILS_ENDPOINT,
             urlencode({
@@ -28,8 +26,10 @@ class FetchUser(AuthView):
         if not data.get('domain'):
             return helper.error(ERR_INVALID_DOMAIN)
 
-        # a domain may not yet be configured as this could be the setup flow
-        if self.domain and self.domain != data['domain']:
+        if not DOMAINS:
+            return helper.error(ERR_NO_DOMAINS)
+
+        if data['domain'] not in DOMAINS:
             return helper.error(ERR_INVALID_DOMAIN)
 
         helper.bind_state('user', data)

@@ -11,7 +11,11 @@ CLIENT_ID = getattr(settings, 'GOOGLE_CLIENT_ID', None)
 
 CLIENT_SECRET = getattr(settings, 'GOOGLE_CLIENT_SECRET', None)
 
+DOMAINS = getattr(settings, 'GOOGLE_WHITE_LISTED_DOMAINS', [])
+
 ERR_INVALID_DOMAIN = 'The domain for your Google account is not allowed to authenticate with this provider.'
+
+ERR_NO_DOMAINS = 'No domains configured'
 
 SCOPE = 'email'
 
